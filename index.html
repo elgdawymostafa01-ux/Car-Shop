@@ -1,235 +1,361 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LuxuryCars</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LuxuryCars — معرض السيارات</title>
+  <meta name="description" content="موقع معرض سيارات متكامل: هوم، برودكت، سلايدر صور، تسجيل، تواصل" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@400;700&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap');
+    :root{
+      --bg1: #071026; --bg2:#0b2540; --glass: rgba(255,255,255,0.06);
+      --accent1:#00e5ff; --accent2:#7fff9e; --muted:#a7b3c6; --card:#0f1720;
+      --glass-2: rgba(255,255,255,0.04);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;}
+    body{margin:0;font-family:'Tajawal',sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#eaf4ff}
+    a{color:inherit;text-decoration:none}
 
-    * { margin:0; padding:0; box-sizing:border-box; }
-    body {
-      font-family:'Tajawal', sans-serif;
-      background: linear-gradient(135deg,#0f2027,#203a43,#2c5364);
-      color:#fff; overflow-x:hidden;
-    }
+    /* NAV */
+    header{position:fixed;inset:0 0 auto 0;z-index:1200;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .nav-inner{width:100%;max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}
+    .logo{display:flex;align-items:center;gap:10px}
+    .logo .badge{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:900;color:#001}
+    .logo h1{font-size:1.05rem;margin:0}
+    nav ul{display:flex;gap:14px;align-items:center;list-style:none;margin:0}
+    nav li{font-weight:700}
+    .glass-nav{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(8px);border-radius:14px;padding:8px 12px}
 
-    /* Navbar */
-    header {
-      position:fixed; top:0; left:0; width:100%;
-      display:flex; justify-content:space-between; align-items:center;
-      padding:15px 40px; z-index:1000;
-      backdrop-filter: blur(15px);
-      background: rgba(0,0,0,0.3);
-    }
-    header h1 { color:#00e5ff; font-size:1.6rem; }
-    nav ul { list-style:none; display:flex; gap:25px; }
-    nav a { color:#fff; text-decoration:none; font-weight:700; transition:.3s; }
-    nav a:hover { color:#00e5ff; }
+    /* CTA Buttons */
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:800;border:0;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45);transition:transform .18s ease}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.06);box-shadow:none}
+    .btn:active{transform:translateY(2px)}
 
-    /* Hero Section */
-    .hero {
-      height:100vh; display:flex; flex-direction:column;
-      align-items:center; justify-content:center;
-      text-align:center; padding:0 20px;
-      background: url("https://source.unsplash.com/1600x900/?luxury-car,showroom") center/cover no-repeat;
-      position:relative;
-    }
-    .hero::after {
-      content:""; position:absolute; inset:0; background:rgba(0,0,0,0.6);
-    }
-    .hero-content { position:relative; z-index:2; }
-    .hero h2 { font-size:3rem; margin-bottom:20px; color:#00e5ff; }
-    .hero p { font-size:1.2rem; margin-bottom:25px; }
-    .hero button {
-      padding:12px 30px; border:none; border-radius:30px;
-      background: linear-gradient(45deg,#00e5ff,#00ff99);
-      color:#000; font-weight:bold; cursor:pointer; transition:.3s;
-    }
-    .hero button:hover { transform:scale(1.1); }
+    /* HERO / SLIDER */
+    .hero{height:82vh;display:grid;place-items:center;position:relative;overflow:hidden}
+    .hero .slides{position:absolute;inset:0}
+    .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.02);transition:opacity .8s ease, transform .8s ease}
+    .slide.active{opacity:1;transform:scale(1)}
+    .hero-overlay{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:24px}
+    .hero h2{font-size:2.6rem;letter-spacing:0.6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
+    .hero p{max-width:760px;color:var(--muted)}
+    .hero-controls{display:flex;gap:12px}
 
-    /* Cars Section */
-    .section-title {
-      text-align:center; margin:60px 0 20px; font-size:2rem; color:#00e5ff;
-    }
-    .cars-grid {
-      display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr));
-      gap:30px; padding:20px 40px;
-    }
-    .car-card {
-      background:rgba(255,255,255,0.1);
-      border-radius:15px; overflow:hidden;
-      backdrop-filter: blur(10px);
-      transition:.4s; cursor:pointer;
-      transform-style:preserve-3d;
-    }
-    .car-card:hover { transform:translateY(-12px) rotate3d(1,1,0,8deg); }
-    .car-card img { width:100%; height:200px; object-fit:cover; }
-    .car-info { padding:15px; text-align:center; }
-    .car-info h3 { margin-bottom:10px; font-size:1.3rem; }
-    .car-info p { color:#ccc; }
+    /* SEARCH BAR */
+    .search-bar{max-width:980px;width:calc(100% - 40px);display:flex;gap:10px;padding:12px;border-radius:12px;background:var(--glass);backdrop-filter:blur(8px);align-items:center}
+    .search-bar input,.search-bar select{flex:1;padding:10px;border-radius:10px;border:0;background:transparent;color:inherit}
+    .search-bar input::placeholder{color:#cbd8ec}
 
-    /* Modal */
-    .modal {
-      display:none; position:fixed; inset:0;
-      background:rgba(0,0,0,0.85);
-      justify-content:center; align-items:center;
-      z-index:2000;
-    }
-    .modal-content {
-      background:#111; padding:20px; border-radius:15px;
-      width:90%; max-width:700px; text-align:center;
-      position:relative; color:#fff;
-    }
-    .close-btn {
-      position:absolute; top:15px; right:20px;
-      font-size:24px; cursor:pointer; color:#f55;
-    }
-    .slider { position:relative; }
-    .slider img {
-      width:100%; height:350px; object-fit:cover;
-      border-radius:12px;
-    }
-    .arrow {
-      position:absolute; top:50%; transform:translateY(-50%);
-      background:rgba(0,0,0,0.5); border:none; color:white;
-      padding:10px; cursor:pointer; border-radius:50%;
-    }
-    .arrow.left { left:10px; }
-    .arrow.right { right:10px; }
-    .modal h3 { margin:15px 0 5px; font-size:1.6rem; color:#00e5ff; }
-    .modal p { margin-bottom:15px; }
+    /* SECTIONS */
+    main{max-width:1200px;margin:30px auto;padding:0 20px 60px}
+    .section-title{display:flex;align-items:center;gap:10px;margin:30px 0 18px}
+    .section-title h3{margin:0;color:var(--accent1)}
 
-    .book-btn {
-      background: linear-gradient(45deg,#00e5ff,#00ff99);
-      color:#000; font-weight:bold;
-      border:none; padding:10px 20px;
-      border-radius:25px; cursor:pointer; transition:.3s;
-    }
-    .book-btn:hover { transform:scale(1.05); }
+    /* PRODUCTS GRID */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:transform .25s,box-shadow .2s}
+    .card:hover{transform:translateY(-8px) rotateX(4deg);box-shadow:0 30px 60px rgba(0,0,0,.6)}
+    .card .thumb{height:200px;background-size:cover;background-position:center}
+    .card .body{padding:14px}
+    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
+    .tag{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700;color:var(--muted);font-size:13px}
+    .price{font-weight:900;color:var(--accent2);margin-top:8px}
+    .card .actions{display:flex;gap:8px;margin-top:12px}
 
-    footer {
-      text-align:center; padding:25px;
-      background:rgba(0,0,0,0.4); margin-top:40px;
-      font-size:0.9rem;
-    }
+    /* RESPONSIVE */
+    @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero h2{font-size:2rem}}
+    @media(max-width:640px){.grid{grid-template-columns:1fr}.nav-inner{padding:0 8px}.hero h2{font-size:1.6rem}.hero p{padding:0 12px}}
+
+    /* MODAL */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.85));z-index:1500}
+    .modal .wrap{width:92%;max-width:980px;background:linear-gradient(180deg,#07101a,#0b1a27);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.04)}
+    .modal .grid{grid-template-columns:1fr 380px}
+    .modal .left{padding:8px}
+    .modal .thumb{height:360px;border-radius:10px;background-size:cover;background-position:center}
+    .modal .thumbs{display:flex;gap:8px;margin-top:10px;overflow:auto}
+    .modal .thumbs img{height:64px;width:110px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
+    .modal .thumbs img.active{border-color:var(--accent1)}
+    .modal .right{padding:14px}
+    .modal h4{color:var(--accent1);margin:0 0 8px}
+    .modal .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
+    .spec{background:var(--glass-2);padding:10px;border-radius:8px;font-weight:700}
+
+    /* CONTACT + SIGNUP */
+    .form{display:grid;gap:10px}
+    .input{padding:10px;border-radius:10px;border:0;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.04)}
+
+    footer{margin-top:30px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-top:1px solid rgba(255,255,255,.03)}
+    .footer-grid{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
+    .small{color:var(--muted);font-size:13px}
+
+    /* tiny helpers */
+    .center{display:grid;place-items:center}
+    .float-actions{position:fixed;left:18px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:1400}
+    .pill{padding:10px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:900}
   </style>
 </head>
 <body>
-
-  <!-- Navbar -->
   <header>
-    <h1>LuxuryCars</h1>
-    <nav>
-      <ul>
-        <li><a href="#">الرئيسية</a></li>
-        <li><a href="#cars">السيارات</a></li>
-        <li><a href="#">تواصل</a></li>
-      </ul>
-    </nav>
+    <div class="nav-inner glass-nav">
+      <div class="logo">
+        <div class="badge">LC</div>
+        <div>
+          <h1>LuxuryCars</h1>
+          <div class="small">معرض السيارات الفاخرة</div>
+        </div>
+      </div>
+
+      <nav>
+        <ul>
+          <li><a href="#home">الرئيسية</a></li>
+          <li><a href="#products">المنتجات</a></li>
+          <li><a href="#contact">اتصل بنا</a></li>
+          <li><a href="#signup" id="openSign">سجّل</a></li>
+        </ul>
+      </nav>
+    </div>
   </header>
 
-  <!-- Hero -->
-  <section class="hero">
-    <div class="hero-content">
-      <h2>عالم السيارات الفاخرة</h2>
-      <p>اكتشف أفضل السيارات بأحدث التقنيات والتصميمات المستقبلية</p>
-      <button onclick="document.getElementById('cars').scrollIntoView({behavior:'smooth'})">ابدأ الآن</button>
+  <!-- HERO / SLIDER -->
+  <section id="home" class="hero">
+    <div class="slides" aria-hidden="true">
+      <div class="slide active" style="background-image:url('https://source.unsplash.com/1600x900/?luxury,showroom,car')"></div>
+      <div class="slide" style="background-image:url('https://source.unsplash.com/1600x900/?sports-car')"></div>
+      <div class="slide" style="background-image:url('https://source.unsplash.com/1600x900/?car,interior')"></div>
+    </div>
+
+    <div class="hero-overlay">
+      <div style="width:100%;display:flex;justify-content:center">
+        <div class="search-bar">
+          <input id="q" placeholder="ابحث عن ماركة أو موديل (مثال: BMW)" />
+          <select id="make"><option value="">الكل</option><option>Mercedes</option><option>BMW</option><option>Audi</option><option>Lexus</option></select>
+          <select id="price"><option value="">كل الأسعار</option><option value="low">أقل من 500,000</option><option value="mid">500k - 1M</option><option value="high">أكثر من 1M</option></select>
+          <button class="btn" id="searchBtn">ابحث</button>
+        </div>
+      </div>
+
+      <h2>أقوى العروض على السيارات الفاخرة</h2>
+      <p>تصفّح مجموعتنا المختارة من السيارات الجديدة والمستعملة بحالة ممتازة — صور عالية الجودة، مواصفات كاملة، وخيارات تمويل.</p>
+      <div class="hero-controls">
+        <button class="btn ghost" id="prevHero">⟵</button>
+        <button class="btn ghost" id="nextHero">⟶</button>
+        <a class="btn" href="#products">تصفح السيارات</a>
+      </div>
     </div>
   </section>
 
-  <!-- Cars -->
-  <h2 class="section-title" id="cars">🚘 سياراتنا</h2>
-  <div class="cars-grid">
-    <div class="car-card" 
-         data-name="مرسيدس S-Class" 
-         data-price="1200000" 
-         data-images='["https://source.unsplash.com/600x400/?mercedes,luxury",
-                       "https://source.unsplash.com/600x400/?mercedes,interior"]'>
-      <img src="https://source.unsplash.com/400x250/?car,mercedes" alt="Mercedes">
-      <div class="car-info">
-        <h3>مرسيدس S-Class</h3>
-        <p>1,200,000 ج.م</p>
-      </div>
+  <main>
+    <div class="section-title"><h3>🚘 أحدث السيارات</h3></div>
+    <section id="products" class="grid">
+      <!-- repeatable product card -->
+      <article class="card" data-name="مرسيدس S-Class" data-price="1200000" data-images='["https://source.unsplash.com/800x600/?mercedes,s-class","https://source.unsplash.com/800x600/?mercedes,interior","https://source.unsplash.com/800x600/?mercedes,exterior"]'>
+        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?mercedes,car')"></div>
+        <div class="body">
+          <div class="tags"><span class="tag">مرسيدس</span><span class="tag">سنة 2021</span></div>
+          <h4>مرسيدس S-Class</h4>
+          <div class="price">1,200,000 ج.م</div>
+          <div class="actions">
+            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
+            <button class="btn ghost" onclick="openBookForm('مرسيدس S-Class',1200000)">احجز الآن</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="BMW 7 Series" data-price="1100000" data-images='["https://source.unsplash.com/800x600/?bmw,7series","https://source.unsplash.com/800x600/?bmw,interior"]'>
+        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?bmw,suv')"></div>
+        <div class="body">
+          <div class="tags"><span class="tag">BMW</span><span class="tag">سنة 2020</span></div>
+          <h4>BMW 7 Series</h4>
+          <div class="price">1,100,000 ج.م</div>
+          <div class="actions">
+            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
+            <button class="btn ghost" onclick="openBookForm('BMW 7 Series',1100000)">احجز الآن</button>
+          </div>
+        </div>
+      </article>
+
+      <article class="card" data-name="Audi A8" data-price="950000" data-images='["https://source.unsplash.com/800x600/?audi,a8","https://source.unsplash.com/800x600/?audi,interior"]'>
+        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?audi,car')"></div>
+        <div class="body">
+          <div class="tags"><span class="tag">Audi</span><span class="tag">سنة 2019</span></div>
+          <h4>Audi A8</h4>
+          <div class="price">950,000 ج.م</div>
+          <div class="actions">
+            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
+            <button class="btn ghost" onclick="openBookForm('Audi A8',950000)">احجز الآن</button>
+          </div>
+        </div>
+      </article>
+
+    </section>
+
+    <!-- Contact + Signup Section -->
+    <div style="display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:36px;align-items:start">
+      <section id="contact" class="card" style="padding:18px;">
+        <h4>تواصل معنا</h4>
+        <p class="small">اترك بياناتك وسنتواصل معك خلال 24 ساعة</p>
+        <form id="contactForm" class="form" onsubmit="event.preventDefault(); handleContact()">
+          <input class="input" id="cname" placeholder="الاسم" required>
+          <input class="input" id="cphone" placeholder="رقم الهاتف" required>
+          <input class="input" id="cemail" type="email" placeholder="البريد الإلكتروني (اختياري)">
+          <textarea class="input" id="cmsg" rows="4" placeholder="رسالتك" required></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end">
+            <button class="btn">أرسل</button>
+            <button type="reset" class="btn ghost">إعادة</button>
+          </div>
+        </form>
+      </section>
+
+      <aside class="card" style="padding:18px;">
+        <h4>سجل للحصول على عروض خاصة</h4>
+        <p class="small">اشترك في النشرة الإخبارية واحصل على عروض مميزة</p>
+        <form id="signupForm" class="form" onsubmit="event.preventDefault(); handleSignup()">
+          <input class="input" id="sname" placeholder="الاسم الكامل" required>
+          <input class="input" id="semail" type="email" placeholder="البريد الإلكتروني" required>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button class="btn">سجل الآن</button>
+          </div>
+        </form>
+      </aside>
     </div>
 
-    <div class="car-card" 
-         data-name="BMW 7 Series" 
-         data-price="1100000" 
-         data-images='["https://source.unsplash.com/600x400/?bmw,luxury",
-                       "https://source.unsplash.com/600x400/?bmw,interior"]'>
-      <img src="https://source.unsplash.com/400x250/?car,bmw" alt="BMW">
-      <div class="car-info">
-        <h3>BMW 7 Series</h3>
-        <p>1,100,000 ج.م</p>
-      </div>
-    </div>
+  </main>
 
-    <div class="car-card" 
-         data-name="Audi A8" 
-         data-price="950000" 
-         data-images='["https://source.unsplash.com/600x400/?audi,luxury",
-                       "https://source.unsplash.com/600x400/?audi,interior"]'>
-      <img src="https://source.unsplash.com/400x250/?car,audi" alt="Audi">
-      <div class="car-info">
-        <h3>Audi A8</h3>
-        <p>950,000 ج.م</p>
+  <!-- Modal: Product Details -->
+  <div class="modal" id="detailModal" aria-hidden="true">
+    <div class="wrap">
+      <div style="display:grid;grid-template-columns:1fr 380px;gap:12px;align-items:start">
+        <div class="left">
+          <div class="thumb" id="modalMain" style="background-image:url('')"></div>
+          <div class="thumbs" id="modalThumbs"></div>
+        </div>
+        <div class="right">
+          <h4 id="modalName">اسم السيارة</h4>
+          <div class="small" id="modalDesc">مواصفات عامة وصغيرة توضيحية.</div>
+          <div class="specs" id="modalSpecs">
+            <div class="spec">النوع: —</div>
+            <div class="spec">الناقل: —</div>
+            <div class="spec">الكيلومترات: —</div>
+            <div class="spec">الضمان: —</div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
+            <button class="btn" id="modalBookBtn">احجز معاينة</button>
+            <button class="btn ghost" id="modalClose">اغلاق</button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal -->
-  <div class="modal" id="car-modal">
-    <div class="modal-content">
-      <span class="close-btn" id="close-modal">&times;</span>
-      <div class="slider">
-        <button class="arrow left" id="prev-img">❮</button>
-        <img id="modal-img" src="" alt="Car">
-        <button class="arrow right" id="next-img">❯</button>
-      </div>
-      <h3 id="modal-title"></h3>
-      <p id="modal-price"></p>
-      <button class="book-btn">احجز الآن</button>
+  <!-- Modal: Booking Form (small) -->
+  <div class="modal" id="bookModal">
+    <div class="wrap center" style="max-width:520px">
+      <h4 id="bookTitle">احجز الآن</h4>
+      <form id="bookForm" class="form" onsubmit="event.preventDefault(); handleBook()">
+        <input class="input" id="bname" required placeholder="اسمك">
+        <input class="input" id="bphone" required placeholder="رقم الهاتف">
+        <input class="input" id="bcar" id="bcar" readonly>
+        <div style="display:flex;gap:8px;justify-content:flex-end">
+          <button class="btn">إرسال</button>
+          <button class="btn ghost" type="button" onclick="closeModal('bookModal')">إلغاء</button>
+        </div>
+      </form>
     </div>
   </div>
 
-  <!-- Footer -->
+  <!-- Floating actions -->
+  <div class="float-actions">
+    <button class="pill" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">تواصل سريع</button>
+    <button class="pill" onclick="document.getElementById('signupForm').scrollIntoView({behavior:'smooth'})">سجل</button>
+  </div>
+
   <footer>
-    © 2025 LuxuryCars | جميع الحقوق محفوظة
+    <div class="footer-grid">
+      <div>
+        <strong>LuxuryCars</strong>
+        <div class="small">عنوان المعرض: شارع المثال، القاهرة</div>
+      </div>
+      <div class="small">© 2025 LuxuryCars • جميع الحقوق محفوظة</div>
+      <div class="small">اتّصل: 0100-000-000 • info@luxurycars.example</div>
+    </div>
   </footer>
 
   <script>
-    const cars=document.querySelectorAll('.car-card');
-    const modal=document.getElementById('car-modal');
-    const modalImg=document.getElementById('modal-img');
-    const modalTitle=document.getElementById('modal-title');
-    const modalPrice=document.getElementById('modal-price');
-    const closeModal=document.getElementById('close-modal');
-    const prevBtn=document.getElementById('prev-img');
-    const nextBtn=document.getElementById('next-img');
-    let images=[],currentIndex=0;
+    // HERO slider
+    (function(){
+      const slides = document.querySelectorAll('.slide');
+      let idx = 0; const next = ()=>{ slides[idx].classList.remove('active'); idx=(idx+1)%slides.length; slides[idx].classList.add('active'); };
+      let timer = setInterval(next,4500);
+      document.getElementById('nextHero').addEventListener('click',()=>{clearInterval(timer); next(); timer=setInterval(next,4500)});
+      document.getElementById('prevHero').addEventListener('click',()=>{clearInterval(timer); slides[idx].classList.remove('active'); idx=(idx-1+slides.length)%slides.length; slides[idx].classList.add('active'); timer=setInterval(next,4500)});
+    })();
 
-    cars.forEach(car=>{
-      car.addEventListener('click',()=>{
-        images=JSON.parse(car.dataset.images);
-        currentIndex=0;
-        modalImg.src=images[currentIndex];
-        modalTitle.textContent=car.dataset.name;
-        modalPrice.textContent="السعر: "+car.dataset.price+" ج.م";
-        modal.style.display="flex";
-      });
-    });
+    // FILTER + SEARCH
+    const cards = [...document.querySelectorAll('.card')];
+    document.getElementById('searchBtn').addEventListener('click', applyFilters);
+    function applyFilters(){
+      const q = document.getElementById('q').value.trim().toLowerCase();
+      const make = document.getElementById('make').value;
+      const price = document.getElementById('price').value;
+      cards.forEach(c=>{
+        const name = c.dataset.name.toLowerCase();
+        const p = parseInt(c.dataset.price);
+        let show = true;
+        if(q) show = show && name.includes(q);
+        if(make) show = show && name.includes(make.toLowerCase());
+        if(price=='low') show = show && p < 500000;
+        if(price=='mid') show = show && p >=500000 && p<=1000000;
+        if(price=='high') show = show && p>1000000;
+        c.style.display = show? 'block':'none';
+      })
+    }
 
-    prevBtn.addEventListener('click',()=>{
-      currentIndex=(currentIndex-1+images.length)%images.length;
-      modalImg.src=images[currentIndex];
-    });
-    nextBtn.addEventListener('click',()=>{
-      currentIndex=(currentIndex+1)%images.length;
-      modalImg.src=images[currentIndex];
-    });
-    closeModal.addEventListener('click',()=>modal.style.display="none");
-    window.addEventListener('click',e=>{ if(e.target===modal) modal.style.display="none"; });
+    // OPEN DETAILS modal with slider thumbnails
+    function openDetails(card){
+      const modal = document.getElementById('detailModal');
+      const main = document.getElementById('modalMain');
+      const thumbs = document.getElementById('modalThumbs');
+      const name = card.dataset.name; const price = card.dataset.price; const arr = JSON.parse(card.dataset.images||'[]');
+      document.getElementById('modalName').textContent = name;
+      document.getElementById('modalDesc').textContent = 'تفاصيل مختصرة عن السيارة — يمكنك حجز معاينة أو طلب مواصفات كاملة.';
+
+      // specs placeholder
+      document.getElementById('modalSpecs').innerHTML = '<div class="spec">النوع: '+(card.querySelector('.tag')?.textContent||'—')+'</div><div class="spec">الناقل: أوتوماتيك</div><div class="spec">الكيلومترات: 30,000 كم</div><div class="spec">الحالة: ممتازة</div>';
+
+      if(arr.length){ main.style.backgroundImage = `url('${arr[0]}')`; thumbs.innerHTML = arr.map((u,i)=>`<img src="${u}" data-i="${i}" onclick="switchThumb(this)" class="${i===0?'active':''}"/>`).join(''); }
+      else{ main.style.backgroundImage = ''; thumbs.innerHTML = ''; }
+
+      // book button data
+      const bookBtn = document.getElementById('modalBookBtn'); bookBtn.onclick = ()=>{ openBookForm(name,price) };
+
+      modal.style.display = 'flex';
+    }
+    function switchThumb(el){ document.querySelectorAll('#modalThumbs img').forEach(i=>i.classList.remove('active')); el.classList.add('active'); document.getElementById('modalMain').style.backgroundImage = `url('${el.src}')`; }
+    document.getElementById('modalClose').addEventListener('click', ()=> closeModal('detailModal'));
+
+    // Booking
+    function openBookForm(car,price){
+      const bm = document.getElementById('bookModal');
+      document.getElementById('bookTitle').textContent = 'احجز معاينة: '+car+' — '+price+' ج.م';
+      document.getElementById('bcar').value = car;
+      bm.style.display = 'flex';
+    }
+    function closeModal(id){ document.getElementById(id).style.display='none'; }
+
+    // handle forms (placeholder actions)
+    function handleContact(){
+      const name=document.getElementById('cname').value; const phone=document.getElementById('cphone').value; const msg=document.getElementById('cmsg').value;
+      alert('تم استلام رسالتك، شكراً '+name+'\nسنرد خلال 24 ساعة.'); document.getElementById('contactForm').reset();
+    }
+    function handleSignup(){ const name=document.getElementById('sname').value; const email=document.getElementById('semail').value; alert('شكراً '+name+'! تم التسجيل بالبريد: '+email); document.getElementById('signupForm').reset(); }
+    function handleBook(){ const name=document.getElementById('bname').value; const phone=document.getElementById('bphone').value; const car=document.getElementById('bcar').value; alert('تم طلب حجز لمعاينة '+car+'\nشكراً '+name); closeModal('bookModal'); document.getElementById('bookForm').reset(); }
+
+    // close modals by clicking outside
+    document.querySelectorAll('.modal').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.style.display='none' }) });
+
+    // Quick sign link
+    document.getElementById('openSign').addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById('sname').focus(); window.scrollTo({top: document.getElementById('signupForm').getBoundingClientRect().top + window.scrollY - 100, behavior:'smooth'}) });
   </script>
 </body>
 </html>
