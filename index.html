@@ -1,447 +1,200 @@
 <!DOCTYPE html>
-<html lang="ar" dir="rtl">
+<html lang="ar">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>معرض سيارات | Car Shop</title>
-  <meta name="description" content="موقع بيع سيارات بسيط باستخدام HTML, CSS, و JavaScript فقط" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>معرض السيارات</title>
   <style>
-    :root{
-      --bg:#0f1220; --panel:#151833; --muted:#aab1d1; --text:#e9ecff; --brand:#6e7cff; --brand-2:#48e1c3;
-      --danger:#ff6b6b; --ok:#1fd47c; --shadow:0 12px 40px rgba(0,0,0,.35);
+    :root {
+      --primary: #1e90ff;
+      --bg: #f9f9f9;
+      --text: #222;
+      --card-bg: #fff;
+      --dark-bg: #1c1c1c;
+      --dark-text: #f1f1f1;
     }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:radial-gradient(1200px 600px at 10% -10%,rgba(110,124,255,.15),transparent),radial-gradient(800px 500px at 90% -20%,rgba(72,225,195,.12),transparent),var(--bg);color:var(--text);font:16px/1.75 system-ui,-apple-system,Segoe UI,Roboto,Ubuntu,"Noto Sans Arabic",Arial}
-    a{color:inherit}
-    .container{max-width:1200px;margin:auto;padding:24px}
-    .btn{appearance:none;border:0;background:var(--brand);color:#fff;padding:10px 16px;border-radius:14px;font-weight:700;cursor:pointer;transition:.2s transform,.2s opacity;box-shadow:var(--shadow)}
-    .btn:hover{transform:translateY(-1px)}
-    .btn.ghost{background:transparent;border:1px solid #3b3f6a}
-    .btn.danger{background:var(--danger)}
-    .tag{padding:4px 10px;border-radius:999px;background:#232750;color:#cbd2ff;font-size:12px;font-weight:700}
-    .muted{color:var(--muted)}
 
-    /* NAV */
-    nav{position:sticky;top:0;z-index:30;background:linear-gradient(0deg,rgba(15,18,32,.6),rgba(15,18,32,.95));backdrop-filter:blur(6px);border-bottom:1px solid #24274a}
-    nav .bar{display:flex;gap:18px;align-items:center;justify-content:space-between}
-    .logo{display:flex;gap:10px;align-items:center;font-weight:900}
-    .logo-badge{width:36px;height:36px;border-radius:12px;background:linear-gradient(135deg,var(--brand),var(--brand-2));display:grid;place-items:center;box-shadow:var(--shadow)}
-
-    /* HERO */
-    .hero{display:grid;grid-template-columns:1.1fr .9fr;gap:24px;align-items:center;padding:36px 0}
-    .hero h1{margin:0;font-size:44px;line-height:1.2}
-    .hero p{margin:.5rem 0 1.25rem}
-    .hero .panel{background:linear-gradient(180deg,#141837,#0f132b);border:1px solid #242a56;border-radius:24px;overflow:hidden;box-shadow:var(--shadow)}
-    .hero .panel img{width:100%;height:100%;object-fit:cover;display:block}
-
-    /* FILTERS */
-    .filters{display:grid;grid-template-columns:1.2fr repeat(5,1fr) auto;gap:10px;background:linear-gradient(180deg,#141837,#10132d);border:1px solid #232651;border-radius:20px;padding:14px;align-items:center;box-shadow:var(--shadow)}
-    .filters input,.filters select{width:100%;padding:10px 12px;border-radius:12px;border:1px solid #2a2e5d;background:#0e1230;color:var(--text)}
-    .filters label{font-size:12px;color:#c7ccf1}
-    .filters .col{display:grid;gap:6px}
-    .filters .actions{display:flex;gap:10px;justify-content:flex-end}
-
-    /* GRID */
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:18px}
-    .card{background:linear-gradient(180deg,#141837,#10132d);border:1px solid #232651;border-radius:20px;overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--shadow)}
-    .card .thumb{position:relative}
-    .card img{width:100%;height:200px;object-fit:cover;display:block}
-    .card .thumb .price{position:absolute;bottom:10px;left:10px;background:rgba(0,0,0,.55);backdrop-filter:blur(4px);padding:6px 10px;border-radius:10px}
-    .card .content{padding:14px;display:grid;gap:10px}
-    .row{display:flex;gap:8px;flex-wrap:wrap}
-    .card .actions{display:flex;gap:8px;margin-top:auto}
-
-    /* SECTION TITLES */
-    h2.section{margin:28px 0 10px;display:flex;align-items:center;gap:10px;font-size:22px}
-    .dot{width:8px;height:8px;border-radius:999px;background:linear-gradient(135deg,var(--brand),var(--brand-2))}
-
-    /* MODALS */
-    dialog{border:0;border-radius:18px;padding:0;max-width:900px;width:min(92vw,900px);background:linear-gradient(180deg,#12163a,#0f1228);color:var(--text);box-shadow:var(--shadow)}
-    dialog::backdrop{background:rgba(0,0,0,.6)}
-    .modal-hd{display:flex;justify-content:space-between;align-items:center;padding:14px 16px;border-bottom:1px solid #2a2e5d}
-    .modal-bd{padding:16px}
-    .modal-ft{padding:14px 16px;border-top:1px solid #2a2e5d;display:flex;justify-content:flex-end;gap:8px}
-
-    .detail{display:grid;grid-template-columns:1.2fr .8fr;gap:16px}
-    .detail .big{border-radius:14px;overflow:hidden;border:1px solid #272a52}
-    .detail .thumbs{display:flex;gap:10px;margin-top:10px}
-    .detail .thumbs img{width:70px;height:50px;object-fit:cover;border-radius:10px;border:1px solid #2a2e5d;cursor:pointer}
-    .specs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-    .spec{background:#0f1330;border:1px solid #262a57;border-radius:12px;padding:10px}
-
-    /* CART BADGE */
-    .cart-btn{position:relative}
-    .cart-count{position:absolute;top:-8px;right:-8px;background:var(--danger);color:#fff;font-size:12px;border-radius:999px;min-width:20px;height:20px;display:grid;place-items:center;padding:0 6px;border:2px solid #0f1220}
-
-    /* FOOTER */
-    footer{margin-top:36px;border-top:1px solid #262a57;padding:26px 0;color:#b9c0ea}
-
-    /* RESPONSIVE */
-    @media (max-width:1024px){
-      .hero{grid-template-columns:1fr}
-      .filters{grid-template-columns:1fr 1fr 1fr 1fr;grid-auto-rows:auto}
-      .filters .actions{grid-column:1/-1}
-      .grid{grid-template-columns:repeat(2,1fr)}
-      .detail{grid-template-columns:1fr}
+    body {
+      margin: 0;
+      font-family: 'Cairo', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      transition: 0.3s;
     }
-    @media (max-width:640px){
-      .filters{grid-template-columns:1fr 1fr}
-      .grid{grid-template-columns:1fr}
+
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    header h1 { margin: 0; }
+
+    nav ul {
+      list-style: none;
+      display: flex;
+      gap: 15px;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav a {
+      color: white;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    #theme-toggle {
+      background: white;
+      border: none;
+      padding: 5px 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    .filters {
+      padding: 15px;
+      text-align: center;
+    }
+
+    .cars-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+      padding: 20px;
+    }
+
+    .car-card {
+      background: var(--card-bg);
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+      padding: 15px;
+      text-align: center;
+      transition: 0.3s;
+    }
+
+    .car-card:hover {
+      transform: scale(1.05);
+    }
+
+    .car-card img {
+      width: 100%;
+      border-radius: 8px;
+    }
+
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      margin-top: 10px;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+
+    footer {
+      text-align: center;
+      padding: 15px;
+      background: #222;
+      color: white;
+      margin-top: 20px;
+    }
+
+    /* Dark mode */
+    .dark-mode {
+      background: var(--dark-bg);
+      color: var(--dark-text);
+    }
+
+    .dark-mode .car-card {
+      background: #2a2a2a;
+      color: var(--dark-text);
     }
   </style>
 </head>
 <body>
-  <!-- NAV -->
-  <nav>
-    <div class="container bar">
-      <div class="logo">
-        <div class="logo-badge">🚗</div>
-        <div>
-          معرض <span style="color:var(--brand-2);font-weight:900">السيارات</span>
-          <div class="muted" style="font-size:12px">HTML + CSS + JS فقط</div>
-        </div>
-      </div>
-      <div style="display:flex;gap:10px;align-items:center">
-        <button class="btn ghost" onclick="openCart()">سلة الشراء</button>
-        <div class="cart-btn" onclick="openCart()" style="cursor:pointer"><span class="tag">العناصر</span><span id="cartCount" class="cart-count" hidden>0</span></div>
-      </div>
-    </div>
-  </nav>
-
-  <!-- HERO -->
-  <header class="container hero">
-    <div>
-      <h1>بيع وشراء السيارات بسهولة ⚡</h1>
-      <p class="muted">موقع تعريفي ومتجر بسيط لعرض السيارات بتصميم أنيق وخفيف. يدعم البحث، التصفية، عرض التفاصيل، وسلة شراء تجريبية تحفظ في المتصفح.</p>
-      <div style="display:flex;gap:10px">
-        <a class="btn" href="#catalog">استكشف المعروض</a>
-        <button class="btn ghost" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">تواصل معنا</button>
-      </div>
-    </div>
-    <div class="panel">
-      <img src="https://images.unsplash.com/photo-1549921296-3b4a6b7483c6?q=80&w=1600&auto=format&fit=crop" alt="cars" />
-    </div>
+  <header>
+    <h1>🚗 معرض السيارات</h1>
+    <nav>
+      <ul>
+        <li><a href="#">الرئيسية</a></li>
+        <li><a href="#">السيارات</a></li>
+        <li><a href="#">تواصل معنا</a></li>
+      </ul>
+    </nav>
+    <button id="theme-toggle">🌙</button>
   </header>
 
-  <main class="container">
-    <h2 id="catalog" class="section"><span class="dot"></span> الكتالوج</h2>
+  <main>
+    <section class="filters">
+      <label>الفلترة بالسعر:</label>
+      <select id="price-filter">
+        <option value="all">الكل</option>
+        <option value="low">أقل من 300,000 ج.م</option>
+        <option value="mid">من 300,000 إلى 600,000 ج.م</option>
+        <option value="high">أعلى من 600,000 ج.م</option>
+      </select>
+    </section>
 
-    <!-- FILTERS -->
-    <div class="filters" id="filters">
-      <div class="col">
-        <label>بحث (الماركة/الموديل)</label>
-        <input type="search" id="q" placeholder="مثال: BMW أو Corolla" />
+    <section class="cars-grid" id="cars-list">
+      <!-- سيارات -->
+      <div class="car-card" data-price="250000">
+        <img src="https://source.unsplash.com/400x250/?car,hyundai" alt="سيارة 1">
+        <h2>هيونداي النترا</h2>
+        <p>السعر: 250,000 ج.م</p>
+        <button>تفاصيل</button>
       </div>
-      <div class="col">
-        <label>الماركة</label>
-        <select id="make">
-          <option value="">الكل</option>
-          <option>Toyota</option>
-          <option>BMW</option>
-          <option>Mercedes</option>
-          <option>Kia</option>
-          <option>Hyundai</option>
-          <option>Nissan</option>
-        </select>
+      <div class="car-card" data-price="450000">
+        <img src="https://source.unsplash.com/400x250/?car,toyota" alt="سيارة 2">
+        <h2>تويوتا كورولا</h2>
+        <p>السعر: 450,000 ج.م</p>
+        <button>تفاصيل</button>
       </div>
-      <div class="col">
-        <label>السنة (من)</label>
-        <select id="yearFrom"></select>
+      <div class="car-card" data-price="750000">
+        <img src="https://source.unsplash.com/400x250/?car,bmw" alt="سيارة 3">
+        <h2>BMW X5</h2>
+        <p>السعر: 750,000 ج.م</p>
+        <button>تفاصيل</button>
       </div>
-      <div class="col">
-        <label>السنة (إلى)</label>
-        <select id="yearTo"></select>
-      </div>
-      <div class="col">
-        <label>الناقل</label>
-        <select id="trans">
-          <option value="">الكل</option>
-          <option>أوتوماتيك</option>
-          <option>مانيوال</option>
-        </select>
-      </div>
-      <div class="col">
-        <label>الحد الأقصى للسعر ($)</label>
-        <input id="maxPrice" type="number" min="0" placeholder="مثال: 20000" />
-      </div>
-      <div class="actions">
-        <button class="btn" onclick="applyFilters()">تصفية</button>
-        <button class="btn ghost" onclick="resetFilters()">إعادة ضبط</button>
-      </div>
-    </div>
-
-    <!-- GRID -->
-    <div id="grid" class="grid" aria-live="polite"></div>
-
-    <h2 class="section" id="contact"><span class="dot"></span> تواصل معنا</h2>
-    <div class="card" style="padding:16px;display:grid;gap:10px">
-      <form id="contactForm" onsubmit="event.preventDefault(); alert('تم الإرسال ✉️ — شكراً لتواصلك!'); this.reset();">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
-          <input required placeholder="الاسم" style="padding:12px;border-radius:12px;border:1px solid #2a2e5d;background:#0e1230;color:var(--text)">
-          <input required type="email" placeholder="البريد" style="padding:12px;border-radius:12px;border:1px solid #2a2e5d;background:#0e1230;color:var(--text)">
-        </div>
-        <textarea required placeholder="رسالتك" rows="4" style="margin-top:10px;padding:12px;border-radius:12px;border:1px solid #2a2e5d;background:#0e1230;color:var(--text)"></textarea>
-        <div style="display:flex;gap:10px;justify-content:flex-end">
-          <button class="btn">إرسال</button>
-        </div>
-      </form>
-    </div>
+    </section>
   </main>
 
   <footer>
-    <div class="container" style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
-      <div>© <span id="year"></span> معرض السيارات — نموذج تجريبي</div>
-      <div class="muted">استضافة جاهزة على GitHub Pages</div>
-    </div>
+    <p>© 2025 معرض السيارات - جميع الحقوق محفوظة</p>
   </footer>
 
-  <!-- DETAIL MODAL -->
-  <dialog id="detailModal" aria-labelledby="detailTitle">
-    <div class="modal-hd">
-      <strong id="detailTitle">تفاصيل السيارة</strong>
-      <button class="btn ghost" onclick="closeDetail()">إغلاق</button>
-    </div>
-    <div class="modal-bd">
-      <div class="detail">
-        <div>
-          <img id="bigImg" class="big" alt="car" src="" />
-          <div class="thumbs" id="thumbs"></div>
-        </div>
-        <div>
-          <div style="display:flex;justify-content:space-between;align-items:center;gap:8px">
-            <div>
-              <div id="detailName" style="font-weight:900;font-size:20px"></div>
-              <div id="detailTags" class="row" style="margin-top:6px"></div>
-            </div>
-            <div class="tag" id="detailPrice"></div>
-          </div>
-          <div class="specs" id="specs"></div>
-          <div class="row" style="margin-top:10px">
-            <button class="btn" id="detailAdd">أضف إلى السلة</button>
-            <button class="btn ghost" onclick="closeDetail()">إغلاق</button>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="modal-ft">
-      <small class="muted">الصور لأغراض العرض فقط.</small>
-    </div>
-  </dialog>
-
-  <!-- CART MODAL -->
-  <dialog id="cartModal" aria-labelledby="cartTitle">
-    <div class="modal-hd">
-      <strong id="cartTitle">سلة الشراء</strong>
-      <button class="btn ghost" onclick="closeCart()">إغلاق</button>
-    </div>
-    <div class="modal-bd" id="cartBody"></div>
-    <div class="modal-ft">
-      <button class="btn danger" onclick="clearCart()">تفريغ السلة</button>
-      <button class="btn" onclick="checkout()">اتمام الشراء</button>
-    </div>
-  </dialog>
-
   <script>
-    // ======= بيانات السيارات (مثال) =======
-    const cars = [
-      {id:1, make:'Toyota', model:'Corolla', year:2020, price:15500, mileage:42000, transmission:'أوتوماتيك', fuel:'بنزين', color:'أبيض', images:[
-        'https://images.unsplash.com/photo-1590362891991-f776e747a588?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1549924231-f129b911e442?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1620721138670-cd1d07e03df3?q=80&w=1600&auto=format&fit=crop'
-      ]},
-      {id:2, make:'BMW', model:'3 Series', year:2019, price:23500, mileage:60000, transmission:'أوتوماتيك', fuel:'بنزين', color:'أسود', images:[
-        'https://images.unsplash.com/photo-1576435728678-68d0fbf94e91?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1555215695-3004980ad54e?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1571601035754-5c927f2d7edc?q=80&w=1600&auto=format&fit=crop'
-      ]},
-      {id:3, make:'Mercedes', model:'C200', year:2021, price:31500, mileage:28000, transmission:'أوتوماتيك', fuel:'بنزين', color:'رمادي', images:[
-        'https://images.unsplash.com/photo-1550355291-bbee04a92027?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1578022761386-611fe039549f?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1511919884226-fd3cad34687c?q=80&w=1600&auto=format&fit=crop'
-      ]},
-      {id:4, make:'Kia', model:'Sportage', year:2018, price:14900, mileage:78000, transmission:'أوتوماتيك', fuel:'بنزين', color:'فضي', images:[
-        'https://images.unsplash.com/photo-1617819131768-6ee71dc15f0a?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1517940310602-6bf6b88d5cd0?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1523961131990-5ea7c61b2107?q=80&w=1600&auto=format&fit=crop'
-      ]},
-      {id:5, make:'Hyundai', model:'Elantra', year:2022, price:18900, mileage:22000, transmission:'أوتوماتيك', fuel:'بنزين', color:'أزرق', images:[
-        'https://images.unsplash.com/photo-1621955964441-1f4b6f5fa8d6?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1619767886558-efdc259cde1b?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1623812517827-30ca59d6415b?q=80&w=1600&auto=format&fit=crop'
-      ]},
-      {id:6, make:'Nissan', model:'Qashqai', year:2017, price:13200, mileage:91000, transmission:'مانيوال', fuel:'بنزين', color:'أحمر', images:[
-        'https://images.unsplash.com/photo-1617819131825-bc9b87222e23?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1600&auto=format&fit=crop',
-        'https://images.unsplash.com/photo-1525609004556-c46c7d6cf023?q=80&w=1600&auto=format&fit=crop'
-      ]}
-    ];
+    // فلترة السيارات حسب السعر
+    const filter = document.getElementById("price-filter");
+    const cars = document.querySelectorAll(".car-card");
 
-    // ======= حالة التطبيق =======
-    const state = { q:'', make:'', yearFrom:'', yearTo:'', trans:'', maxPrice:'', sort:'' };
-    let cart = JSON.parse(localStorage.getItem('cart_cars')||'[]');
-
-    // ======= أدوات مساعدة =======
-    const $ = (sel,root=document) => root.querySelector(sel);
-    const $$ = (sel,root=document) => [...root.querySelectorAll(sel)];
-    const formatUSD = n => new Intl.NumberFormat('en-US',{style:'currency',currency:'USD',maximumFractionDigits:0}).format(n);
-
-    // ======= تهيئة السنوات في الفلاتر =======
-    (function initYears(){
-      const now = new Date().getFullYear();
-      const from = $('#yearFrom'), to = $('#yearTo');
-      from.innerHTML = '<option value="">الكل</option>';
-      to.innerHTML = '<option value="">الكل</option>';
-      for(let y = now; y >= 2005; y--){
-        const opt1 = document.createElement('option'); opt1.value = y; opt1.textContent = y; from.appendChild(opt1);
-        const opt2 = document.createElement('option'); opt2.value = y; opt2.textContent = y; to.appendChild(opt2);
-      }
-    })();
-
-    // ======= عرض الشبكة =======
-    function renderCars(){
-      const grid = $('#grid');
-      const list = cars.filter(c => {
-        if(state.q){
-          const q = state.q.toLowerCase();
-          const hit = (c.make+" "+c.model).toLowerCase().includes(q);
-          if(!hit) return false;
+    filter.addEventListener("change", () => {
+      const value = filter.value;
+      cars.forEach(car => {
+        const price = parseInt(car.dataset.price);
+        if (value === "all") {
+          car.style.display = "block";
+        } else if (value === "low" && price < 300000) {
+          car.style.display = "block";
+        } else if (value === "mid" && price >= 300000 && price <= 600000) {
+          car.style.display = "block";
+        } else if (value === "high" && price > 600000) {
+          car.style.display = "block";
+        } else {
+          car.style.display = "none";
         }
-        if(state.make && c.make !== state.make) return false;
-        if(state.trans && c.transmission !== state.trans) return false;
-        if(state.yearFrom && c.year < +state.yearFrom) return false;
-        if(state.yearTo && c.year > +state.yearTo) return false;
-        if(state.maxPrice && c.price > +state.maxPrice) return false;
-        return true;
-      }).sort((a,b)=> a.price - b.price);
+      });
+    });
 
-      grid.innerHTML = list.map(c => `
-        <article class="card" aria-label="${c.make} ${c.model}">
-          <div class="thumb">
-            <img src="${c.images[0]}" alt="${c.make} ${c.model}" loading="lazy" />
-            <div class="price">${formatUSD(c.price)}</div>
-          </div>
-          <div class="content">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-              <div style="font-weight:900">${c.make} ${c.model} <span class="muted">${c.year}</span></div>
-              <span class="tag">${c.transmission}</span>
-            </div>
-            <div class="row">
-              <span class="tag">${c.mileage.toLocaleString()} كم</span>
-              <span class="tag">${c.fuel}</span>
-              <span class="tag">${c.color}</span>
-            </div>
-            <div class="actions">
-              <button class="btn" onclick='openDetail(${c.id})'>التفاصيل</button>
-              <button class="btn ghost" onclick='addToCart(${c.id})'>أضف للسلة</button>
-            </div>
-          </div>
-        </article>
-      `).join('');
-
-      if(!list.length){
-        grid.innerHTML = `<div class="card" style="padding:18px">لا توجد سيارات مطابقة للبحث الحالي.</div>`;
-      }
-    }
-
-    // ======= فلاتر =======
-    function applyFilters(){
-      state.q = $('#q').value.trim();
-      state.make = $('#make').value;
-      state.yearFrom = $('#yearFrom').value;
-      state.yearTo = $('#yearTo').value;
-      state.trans = $('#trans').value;
-      state.maxPrice = $('#maxPrice').value;
-      renderCars();
-    }
-    function resetFilters(){
-      $$('#filters input').forEach(i=>i.value='');
-      $$('#filters select').forEach(s=>s.value='');
-      state.q=state.make=state.yearFrom=state.yearTo=state.trans=state.maxPrice='';
-      renderCars();
-    }
-
-    // ======= تفاصيل =======
-    function openDetail(id){
-      const c = cars.find(x=>x.id===id); if(!c) return;
-      $('#detailTitle').textContent = `${c.make} ${c.model} ${c.year}`;
-      $('#detailName').textContent = `${c.make} ${c.model}`;
-      $('#detailPrice').textContent = formatUSD(c.price);
-      $('#detailTags').innerHTML = `<span class="tag">${c.year}</span><span class="tag">${c.transmission}</span><span class="tag">${c.fuel}</span>`;
-      $('#specs').innerHTML = `
-        <div class="spec">عدد الكيلومترات: <strong>${c.mileage.toLocaleString()} كم</strong></div>
-        <div class="spec">اللون: <strong>${c.color}</strong></div>
-        <div class="spec">الحالة: <strong>ممتازة</strong></div>
-        <div class="spec">بلد المنشأ: <strong>—</strong></div>`;
-      const big = $('#bigImg'); big.src = c.images[0];
-      const thumbs = $('#thumbs');
-      thumbs.innerHTML = c.images.map(src=>`<img src="${src}" alt="thumb" onclick="document.getElementById('bigImg').src='${src}'">`).join('');
-      $('#detailAdd').onclick = ()=>{ addToCart(c.id); closeDetail(); };
-      $('#detailModal').showModal();
-    }
-    function closeDetail(){ $('#detailModal').close(); }
-
-    // ======= سلة الشراء =======
-    function addToCart(id){
-      const item = cars.find(x=>x.id===id); if(!item) return;
-      const exists = cart.find(x=>x.id===id);
-      if(exists) exists.qty += 1; else cart.push({id:item.id, name:`${item.make} ${item.model} ${item.year}` , price:item.price, img:item.images[0], qty:1});
-      saveCart();
-      bumpCartCount();
-    }
-    function removeFromCart(id){
-      cart = cart.filter(x=>x.id!==id); saveCart(); renderCart();
-    }
-    function changeQty(id,delta){
-      const it = cart.find(x=>x.id===id); if(!it) return; it.qty = Math.max(1, it.qty+delta); saveCart(); renderCart();
-    }
-    function saveCart(){ localStorage.setItem('cart_cars', JSON.stringify(cart)); updateCartCount(); }
-    function updateCartCount(){ const n = cart.reduce((s,x)=>s+x.qty,0); const el = $('#cartCount'); el.textContent = n; el.hidden = n===0; }
-    function bumpCartCount(){ const el = $('#cartCount'); el.animate([{transform:'scale(1)'},{transform:'scale(1.2)'},{transform:'scale(1)'}],{duration:300}); updateCartCount(); }
-
-    function renderCart(){
-      const body = $('#cartBody');
-      if(!cart.length){ body.innerHTML = '<div class="muted">السلة فارغة.</div>'; return; }
-      const total = cart.reduce((s,x)=> s + x.price * x.qty, 0);
-      body.innerHTML = `
-        <div style="display:grid;gap:12px">
-          ${cart.map(x=>`
-            <div class="card" style="display:grid;grid-template-columns:auto 1fr auto;gap:10px;padding:10px">
-              <img src="${x.img}" alt="${x.name}" style="width:100px;height:70px;object-fit:cover;border-radius:12px;border:1px solid #2a2e5d" />
-              <div style="display:grid">
-                <div style="font-weight:900">${x.name}</div>
-                <div class="muted">${formatUSD(x.price)}</div>
-                <div class="row" style="margin-top:6px">
-                  <button class="btn ghost" onclick="changeQty(${x.id},-1)">−</button>
-                  <span class="tag">${x.qty}</span>
-                  <button class="btn ghost" onclick="changeQty(${x.id},1)">+</button>
-                </div>
-              </div>
-              <div style="display:flex;gap:8px;align-items:center">
-                <strong>${formatUSD(x.price*x.qty)}</strong>
-                <button class="btn danger" onclick="removeFromCart(${x.id})">حذف</button>
-              </div>
-            </div>
-          `).join('')}
-          <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 4px">
-            <div>الإجمالي:</div>
-            <h3 style="margin:0">${formatUSD(total)}</h3>
-          </div>
-        </div>`;
-    }
-
-    function openCart(){ renderCart(); $('#cartModal').showModal(); }
-    function closeCart(){ $('#cartModal').close(); }
-    function clearCart(){ cart = []; saveCart(); renderCart(); }
-    function checkout(){ alert('عملية شراء تجريبية ✅\nيمكنك ربطها ببوابة دفع لاحقًا.'); clearCart(); closeCart(); }
-
-    // ======= تهيئة عامة =======
-    document.addEventListener('DOMContentLoaded', () => {
-      renderCars(); updateCartCount(); document.getElementById('year').textContent = new Date().getFullYear();
-      // بحث فوري
-      $('#q').addEventListener('input',()=>{ state.q=$('#q').value.trim(); renderCars(); });
-      // Enter على الفلاتر الرقمية
-      $('#maxPrice').addEventListener('keydown',e=>{ if(e.key==='Enter'){ applyFilters(); }});
+    // تبديل الوضع الليلي/النهاري
+    const themeBtn = document.getElementById("theme-toggle");
+    themeBtn.addEventListener("click", () => {
+      document.body.classList.toggle("dark-mode");
+      themeBtn.textContent =
+        document.body.classList.contains("dark-mode") ? "☀️" : "🌙";
     });
   </script>
 </body>
