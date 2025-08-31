@@ -3,218 +3,178 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>LuxuryCars — معرض السيارات</title>
-  <meta name="description" content="موقع معرض سيارات متكامل: هوم، برودكت، سلايدر صور، تسجيل، تواصل" />
+  <title>LuxuryCars — منصة بيع السيارات</title>
+  <meta name="description" content="منصة بيع سيارات متقدمة — معرض، بحث، فلترة، مقارنة، حجز، تسجيل، وتصميم فخم" />
+
+  <!-- Google Fonts + Swiper + Icons -->
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&family=Poppins:wght@300;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/swiper@9/swiper-bundle.min.css" />
+  <script src="https://unpkg.com/swiper@9/swiper-bundle.min.js"></script>
+  <script src="https://unpkg.com/lucide-static@0.244.0/dist/lucide.js"></script>
+
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;700;900&display=swap');
     :root{
-      --bg1: #071026; --bg2:#0b2540; --glass: rgba(255,255,255,0.06);
-      --accent1:#00e5ff; --accent2:#7fff9e; --muted:#a7b3c6; --card:#0f1720;
-      --glass-2: rgba(255,255,255,0.04);
+      --bg:#06070a; --panel:#0e1116; --muted:#9aa6bf; --glass:rgba(255,255,255,0.04);
+      --accent1: #00d4ff; --accent2: #61ffb8; --gold:#ffd166; --card:#0f1720;
+      --radius:14px; --shadow: 0 10px 30px rgba(2,6,23,.6);
     }
     *{box-sizing:border-box}
-    html,body{height:100%;}
-    body{margin:0;font-family:'Tajawal',sans-serif;background:linear-gradient(180deg,var(--bg1),var(--bg2));color:#eaf4ff}
-    a{color:inherit;text-decoration:none}
+    html,body{height:100%}
+    body{margin:0;background:linear-gradient(180deg,var(--bg),#071026);font-family:'Cairo',sans-serif;color:#e7f0ff;-webkit-font-smoothing:antialiased}
+    a{color:inherit}
 
-    /* NAV */
-    header{position:fixed;inset:0 0 auto 0;z-index:1200;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
-    .nav-inner{width:100%;max-width:1200px;margin:auto;display:flex;justify-content:space-between;align-items:center;gap:18px}
-    .logo{display:flex;align-items:center;gap:10px}
-    .logo .badge{width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:900;color:#001}
+    /* ---------- NAV ---------- */
+    header{position:fixed;inset:0 0 auto 0;z-index:1400;padding:14px 28px;display:flex;align-items:center;justify-content:space-between;gap:18px}
+    .nav-inner{width:100%;max-width:1200px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(8px);padding:8px 12px;border-radius:12px}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo-badge{width:46px;height:46px;border-radius:12px;background:linear-gradient(135deg,var(--accent1),var(--accent2));display:grid;place-items:center;font-weight:900;color:#002}
     .logo h1{font-size:1.05rem;margin:0}
-    nav ul{display:flex;gap:14px;align-items:center;list-style:none;margin:0}
-    nav li{font-weight:700}
-    .glass-nav{background:linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));backdrop-filter:blur(8px);border-radius:14px;padding:8px 12px}
+    nav ul{display:flex;gap:14px;list-style:none;margin:0}
+    nav a{font-weight:700;color:var(--muted);text-decoration:none}
+    .controls{display:flex;gap:10px;align-items:center}
+    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:800;border:0;cursor:pointer;box-shadow:var(--shadow)}
+    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,0.04);box-shadow:none}
+    .icon-btn{background:transparent;border:0;color:var(--muted);cursor:pointer;padding:8px;border-radius:10px}
 
-    /* CTA Buttons */
-    .btn{display:inline-flex;align-items:center;gap:8px;padding:10px 14px;border-radius:12px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:800;border:0;cursor:pointer;box-shadow:0 10px 30px rgba(0,0,0,.45);transition:transform .18s ease}
-    .btn.ghost{background:transparent;color:var(--muted);border:1px solid rgba(255,255,255,.06);box-shadow:none}
-    .btn:active{transform:translateY(2px)}
+    /* ---------- HERO (with Swiper) ---------- */
+    .hero{height:86vh;display:grid;place-items:center;position:relative;overflow:hidden}
+    .hero .swiper{width:100%;height:100%}
+    .hero .slide-contents{position:absolute;z-index:40;left:50%;top:48%;transform:translate(-50%,-48%);display:flex;flex-direction:column;align-items:center;text-align:center;padding:22px;background:linear-gradient(180deg, rgba(2,6,23,0.5), rgba(2,6,23,0.2));border-radius:12px}
+    .hero h2{font-size:2.8rem;color:transparent;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;margin-bottom:8px}
+    .hero p{color:var(--muted);max-width:860px;margin-bottom:12px}
 
-    /* HERO / SLIDER */
-    .hero{height:82vh;display:grid;place-items:center;position:relative;overflow:hidden}
-    .hero .slides{position:absolute;inset:0}
-    .slide{position:absolute;inset:0;background-size:cover;background-position:center;opacity:0;transform:scale(1.02);transition:opacity .8s ease, transform .8s ease}
-    .slide.active{opacity:1;transform:scale(1)}
-    .hero-overlay{position:relative;z-index:5;display:flex;flex-direction:column;align-items:center;text-align:center;gap:18px;padding:24px}
-    .hero h2{font-size:2.6rem;letter-spacing:0.6px;background:linear-gradient(90deg,var(--accent1),var(--accent2));-webkit-background-clip:text;background-clip:text;color:transparent}
-    .hero p{max-width:760px;color:var(--muted)}
-    .hero-controls{display:flex;gap:12px}
+    /* Search bar */
+    .search-bar{display:flex;gap:8px;align-items:center;background:var(--glass);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,0.03)}
+    .search-bar input,.search-bar select{background:transparent;border:0;color:inherit;padding:10px;border-radius:8px;outline:none}
 
-    /* SEARCH BAR */
-    .search-bar{max-width:980px;width:calc(100% - 40px);display:flex;gap:10px;padding:12px;border-radius:12px;background:var(--glass);backdrop-filter:blur(8px);align-items:center}
-    .search-bar input,.search-bar select{flex:1;padding:10px;border-radius:10px;border:0;background:transparent;color:inherit}
-    .search-bar input::placeholder{color:#cbd8ec}
-
-    /* SECTIONS */
-    main{max-width:1200px;margin:30px auto;padding:0 20px 60px}
-    .section-title{display:flex;align-items:center;gap:10px;margin:30px 0 18px}
+    /* ---------- LAYOUT ---------- */
+    main{max-width:1200px;margin:28px auto;padding:0 18px 60px}
+    .section-title{display:flex;align-items:center;gap:12px;margin:34px 0}
     .section-title h3{margin:0;color:var(--accent1)}
 
-    /* PRODUCTS GRID */
-    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px}
-    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:14px;padding:0;overflow:hidden;box-shadow:0 8px 30px rgba(0,0,0,.5);transition:transform .25s,box-shadow .2s}
-    .card:hover{transform:translateY(-8px) rotateX(4deg);box-shadow:0 30px 60px rgba(0,0,0,.6)}
-    .card .thumb{height:200px;background-size:cover;background-position:center}
-    .card .body{padding:14px}
-    .tags{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:8px}
-    .tag{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:999px;font-weight:700;color:var(--muted);font-size:13px}
-    .price{font-weight:900;color:var(--accent2);margin-top:8px}
+    /* ---------- PRODUCTS GRID ---------- */
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));border-radius:12px;overflow:hidden;box-shadow:var(--shadow);transition:transform .28s,box-shadow .28s}
+    .card:hover{transform:translateY(-10px)}
+    .thumb{height:180px;background-size:cover;background-position:center}
+    .card .body{padding:12px}
+    .card h4{margin:6px 0 4px}
+    .meta{display:flex;gap:8px;flex-wrap:wrap}
+    .tag{background:rgba(255,255,255,0.03);padding:6px 10px;border-radius:8px;font-weight:700;color:var(--muted);font-size:13px}
+    .price{font-weight:900;color:var(--gold);margin-top:8px}
     .card .actions{display:flex;gap:8px;margin-top:12px}
 
-    /* RESPONSIVE */
-    @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.hero h2{font-size:2rem}}
-    @media(max-width:640px){.grid{grid-template-columns:1fr}.nav-inner{padding:0 8px}.hero h2{font-size:1.6rem}.hero p{padding:0 12px}}
+    /* compare bar */
+    .compare-bar{position:fixed;bottom:20px;right:20px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;padding:8px 12px;border-radius:999px;display:flex;gap:10px;align-items:center;z-index:1500;box-shadow:0 18px 50px rgba(2,6,23,.6)}
 
-    /* MODAL */
-    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(0,0,0,.7), rgba(0,0,0,.85));z-index:1500}
-    .modal .wrap{width:92%;max-width:980px;background:linear-gradient(180deg,#07101a,#0b1a27);border-radius:14px;padding:16px;border:1px solid rgba(255,255,255,.04)}
-    .modal .grid{grid-template-columns:1fr 380px}
-    .modal .left{padding:8px}
-    .modal .thumb{height:360px;border-radius:10px;background-size:cover;background-position:center}
-    .modal .thumbs{display:flex;gap:8px;margin-top:10px;overflow:auto}
-    .modal .thumbs img{height:64px;width:110px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
-    .modal .thumbs img.active{border-color:var(--accent1)}
-    .modal .right{padding:14px}
-    .modal h4{color:var(--accent1);margin:0 0 8px}
-    .modal .specs{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:8px}
-    .spec{background:var(--glass-2);padding:10px;border-radius:8px;font-weight:700}
+    /* modal */
+    .modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,.8));z-index:1600;padding:18px}
+    .modal .wrap{width:100%;max-width:1100px;background:linear-gradient(180deg,#07101a,#0b1a27);border-radius:12px;padding:16px;border:1px solid rgba(255,255,255,0.04)}
+    .modal-grid{display:grid;grid-template-columns:1fr 360px;gap:14px}
+    .modal .thumb{height:420px;border-radius:10px;background-size:cover;background-position:center}
+    .thumbs{display:flex;gap:8px;margin-top:10px}
+    .thumbs img{width:90px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;border:2px solid transparent}
+    .thumbs img.active{border-color:var(--accent1)}
+    .modal .right{padding:8px}
+    .modal h3{color:var(--accent1);margin:0}
+    .specs{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+    .spec{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px}
 
-    /* CONTACT + SIGNUP */
+    /* forms */
     .form{display:grid;gap:10px}
-    .input{padding:10px;border-radius:10px;border:0;background:transparent;color:inherit;border:1px solid rgba(255,255,255,.04)}
+    .input{padding:10px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
 
-    footer{margin-top:30px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-top:1px solid rgba(255,255,255,.03)}
+    /* footer */
+    footer{margin-top:40px;padding:26px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-top:1px solid rgba(255,255,255,0.03)}
     .footer-grid{display:flex;justify-content:space-between;gap:14px;flex-wrap:wrap}
     .small{color:var(--muted);font-size:13px}
 
-    /* tiny helpers */
-    .center{display:grid;place-items:center}
-    .float-actions{position:fixed;left:18px;bottom:20px;display:flex;flex-direction:column;gap:10px;z-index:1400}
-    .pill{padding:10px 12px;border-radius:999px;background:linear-gradient(90deg,var(--accent1),var(--accent2));color:#001;font-weight:900}
+    /* responsive */
+    @media(max-width:1000px){.grid{grid-template-columns:repeat(2,1fr)}.modal-grid{grid-template-columns:1fr 320px}}
+    @media(max-width:640px){header{padding:12px 16px}.nav-inner{padding:8px}.grid{grid-template-columns:1fr}.modal-grid{grid-template-columns:1fr}.modal .thumb{height:260px}}
+
   </style>
 </head>
 <body>
-  <header>
-    <div class="nav-inner glass-nav">
-      <div class="logo">
-        <div class="badge">LC</div>
-        <div>
-          <h1>LuxuryCars</h1>
-          <div class="small">معرض السيارات الفاخرة</div>
-        </div>
-      </div>
 
+  <header>
+    <div class="nav-inner">
+      <div class="logo"><div class="logo-badge">LC</div><div><h1>LuxuryCars</h1><div class="small">منصة بيع السيارات الفاخرة</div></div></div>
       <nav>
         <ul>
           <li><a href="#home">الرئيسية</a></li>
-          <li><a href="#products">المنتجات</a></li>
-          <li><a href="#contact">اتصل بنا</a></li>
-          <li><a href="#signup" id="openSign">سجّل</a></li>
+          <li><a href="#products">السيارات</a></li>
+          <li><a href="#contact">تواصل</a></li>
+          <li><a href="#signup">سجل</a></li>
         </ul>
       </nav>
+      <div class="controls">
+        <button class="btn ghost" id="themeToggle">وضع النهار</button>
+        <button class="btn" id="addListing">أنشر إعلان</button>
+      </div>
     </div>
   </header>
 
-  <!-- HERO / SLIDER -->
-  <section id="home" class="hero">
-    <div class="slides" aria-hidden="true">
-      <div class="slide active" style="background-image:url('https://source.unsplash.com/1600x900/?luxury,showroom,car')"></div>
-      <div class="slide" style="background-image:url('https://source.unsplash.com/1600x900/?sports-car')"></div>
-      <div class="slide" style="background-image:url('https://source.unsplash.com/1600x900/?car,interior')"></div>
+  <!-- HERO with Swiper -->
+  <section class="hero" id="home">
+    <div class="swiper hero-swiper">
+      <div class="swiper-wrapper">
+        <div class="swiper-slide"><img src="https://source.unsplash.com/1600x900/?luxury-car,showroom" alt="s1"></div>
+        <div class="swiper-slide"><img src="https://source.unsplash.com/1600x900/?sports-car,exterior" alt="s2"></div>
+        <div class="swiper-slide"><img src="https://source.unsplash.com/1600x900/?car,interior" alt="s3"></div>
+      </div>
     </div>
 
-    <div class="hero-overlay">
-      <div style="width:100%;display:flex;justify-content:center">
-        <div class="search-bar">
-          <input id="q" placeholder="ابحث عن ماركة أو موديل (مثال: BMW)" />
-          <select id="make"><option value="">الكل</option><option>Mercedes</option><option>BMW</option><option>Audi</option><option>Lexus</option></select>
-          <select id="price"><option value="">كل الأسعار</option><option value="low">أقل من 500,000</option><option value="mid">500k - 1M</option><option value="high">أكثر من 1M</option></select>
-          <button class="btn" id="searchBtn">ابحث</button>
-        </div>
-      </div>
-
-      <h2>أقوى العروض على السيارات الفاخرة</h2>
-      <p>تصفّح مجموعتنا المختارة من السيارات الجديدة والمستعملة بحالة ممتازة — صور عالية الجودة، مواصفات كاملة، وخيارات تمويل.</p>
-      <div class="hero-controls">
-        <button class="btn ghost" id="prevHero">⟵</button>
-        <button class="btn ghost" id="nextHero">⟶</button>
-        <a class="btn" href="#products">تصفح السيارات</a>
+    <div class="slide-contents hero-content">
+      <h2>متجر السيارات الأضخم</h2>
+      <p>ابحث، قارن، احجز، واشترِ — منصة متكاملة لجميع احتياجات السيارات.</p>
+      <div class="search-bar" style="margin-top:10px">
+        <input id="q" placeholder="بحث: ماركة، موديل، سنة..." />
+        <select id="filterBrand"><option value="">الكل</option></select>
+        <select id="filterPrice"><option value="">كل الأسعار</option><option value="lt500">أقل من 500k</option><option value="500-1m">500k - 1M</option><option value="gt1m">أكثر من 1M</option></select>
+        <button class="btn" id="searchBtn">ابحث</button>
       </div>
     </div>
   </section>
 
-  <main>
-    <div class="section-title"><h3>🚘 أحدث السيارات</h3></div>
-    <section id="products" class="grid">
-      <!-- repeatable product card -->
-      <article class="card" data-name="مرسيدس S-Class" data-price="1200000" data-images='["https://source.unsplash.com/800x600/?mercedes,s-class","https://source.unsplash.com/800x600/?mercedes,interior","https://source.unsplash.com/800x600/?mercedes,exterior"]'>
-        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?mercedes,car')"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">مرسيدس</span><span class="tag">سنة 2021</span></div>
-          <h4>مرسيدس S-Class</h4>
-          <div class="price">1,200,000 ج.م</div>
-          <div class="actions">
-            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
-            <button class="btn ghost" onclick="openBookForm('مرسيدس S-Class',1200000)">احجز الآن</button>
-          </div>
-        </div>
-      </article>
+  <main id="main">
+    <div class="section-title"><h3 id="products">🚘 أحدث السيارات</h3></div>
 
-      <article class="card" data-name="BMW 7 Series" data-price="1100000" data-images='["https://source.unsplash.com/800x600/?bmw,7series","https://source.unsplash.com/800x600/?bmw,interior"]'>
-        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?bmw,suv')"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">BMW</span><span class="tag">سنة 2020</span></div>
-          <h4>BMW 7 Series</h4>
-          <div class="price">1,100,000 ج.م</div>
-          <div class="actions">
-            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
-            <button class="btn ghost" onclick="openBookForm('BMW 7 Series',1100000)">احجز الآن</button>
-          </div>
-        </div>
-      </article>
+    <div class="grid" id="carsGrid">
+      <!-- Cards will be injected by JS (50+ items) -->
+    </div>
 
-      <article class="card" data-name="Audi A8" data-price="950000" data-images='["https://source.unsplash.com/800x600/?audi,a8","https://source.unsplash.com/800x600/?audi,interior"]'>
-        <div class="thumb" style="background-image:url('https://source.unsplash.com/800x600/?audi,car')"></div>
-        <div class="body">
-          <div class="tags"><span class="tag">Audi</span><span class="tag">سنة 2019</span></div>
-          <h4>Audi A8</h4>
-          <div class="price">950,000 ج.م</div>
-          <div class="actions">
-            <button class="btn" onclick="openDetails(this.closest('.card'))">عرض التفاصيل</button>
-            <button class="btn ghost" onclick="openBookForm('Audi A8',950000)">احجز الآن</button>
-          </div>
-        </div>
-      </article>
+    <!-- Compare / Controls -->
+    <div style="display:flex;gap:12px;margin-top:20px;align-items:center;justify-content:flex-end">
+      <button class="btn" id="openCompare">قارن السيارات (0)</button>
+      <button class="btn ghost" id="loadMore">تحميل المزيد</button>
+    </div>
 
-    </section>
-
-    <!-- Contact + Signup Section -->
-    <div style="display:grid;grid-template-columns:1fr 420px;gap:18px;margin-top:36px;align-items:start">
-      <section id="contact" class="card" style="padding:18px;">
+    <!-- Contact & Signup compact -->
+    <div style="display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:36px;align-items:start">
+      <section class="card" style="padding:16px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)">
         <h4>تواصل معنا</h4>
         <p class="small">اترك بياناتك وسنتواصل معك خلال 24 ساعة</p>
         <form id="contactForm" class="form" onsubmit="event.preventDefault(); handleContact()">
-          <input class="input" id="cname" placeholder="الاسم" required>
-          <input class="input" id="cphone" placeholder="رقم الهاتف" required>
-          <input class="input" id="cemail" type="email" placeholder="البريد الإلكتروني (اختياري)">
-          <textarea class="input" id="cmsg" rows="4" placeholder="رسالتك" required></textarea>
-          <div style="display:flex;gap:8px;justify-content:flex-end">
-            <button class="btn">أرسل</button>
-            <button type="reset" class="btn ghost">إعادة</button>
+          <input class="input" id="cname" placeholder="الاسم" required />
+          <input class="input" id="cphone" placeholder="رقم الهاتف" required />
+          <input class="input" id="cemail" placeholder="البريد الإلكتروني" />
+          <textarea class="input" id="cmsg" rows="4" placeholder="رسالتك"></textarea>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
+            <button class="btn" type="submit">أرسل</button>
+            <button class="btn ghost" type="reset">إعادة</button>
           </div>
         </form>
       </section>
 
-      <aside class="card" style="padding:18px;">
-        <h4>سجل للحصول على عروض خاصة</h4>
-        <p class="small">اشترك في النشرة الإخبارية واحصل على عروض مميزة</p>
+      <aside class="card" style="padding:16px;background:linear-gradient(180deg,rgba(255,255,255,0.01),transparent)">
+        <h4>سجل الآن</h4>
+        <p class="small">احصل على إشعارات عن العروض الفريدة</p>
         <form id="signupForm" class="form" onsubmit="event.preventDefault(); handleSignup()">
-          <input class="input" id="sname" placeholder="الاسم الكامل" required>
-          <input class="input" id="semail" type="email" placeholder="البريد الإلكتروني" required>
+          <input class="input" id="sname" placeholder="الاسم الكامل" required />
+          <input class="input" id="semail" placeholder="البريد الإلكتروني" required />
           <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:8px">
-            <button class="btn">سجل الآن</button>
+            <button class="btn" type="submit">سجل الآن</button>
           </div>
         </form>
       </aside>
@@ -222,140 +182,165 @@
 
   </main>
 
-  <!-- Modal: Product Details -->
-  <div class="modal" id="detailModal" aria-hidden="true">
+  <!-- Modal: details -->
+  <div class="modal" id="detailModal">
     <div class="wrap">
-      <div style="display:grid;grid-template-columns:1fr 380px;gap:12px;align-items:start">
-        <div class="left">
-          <div class="thumb" id="modalMain" style="background-image:url('')"></div>
-          <div class="thumbs" id="modalThumbs"></div>
+      <div class="modal-grid">
+        <div>
+          <div id="modalMain" class="thumb" style="background-image:url('')"></div>
+          <div id="modalThumbs" class="thumbs"></div>
         </div>
         <div class="right">
-          <h4 id="modalName">اسم السيارة</h4>
-          <div class="small" id="modalDesc">مواصفات عامة وصغيرة توضيحية.</div>
-          <div class="specs" id="modalSpecs">
-            <div class="spec">النوع: —</div>
-            <div class="spec">الناقل: —</div>
-            <div class="spec">الكيلومترات: —</div>
-            <div class="spec">الضمان: —</div>
-          </div>
-          <div style="margin-top:12px;display:flex;gap:8px;justify-content:flex-end">
-            <button class="btn" id="modalBookBtn">احجز معاينة</button>
-            <button class="btn ghost" id="modalClose">اغلاق</button>
+          <h3 id="modalTitle">اسم السيارة</h3>
+          <div id="modalPrice" class="price">السعر</div>
+          <p id="modalDesc" class="small">وصف مختصر.</p>
+          <div class="specs" id="modalSpecs"></div>
+          <div style="display:flex;gap:8px;justify-content:flex-end;margin-top:12px">
+            <button class="btn" id="bookNow">احجز الآن</button>
+            <button class="btn ghost" id="closeDetail">إغلاق</button>
           </div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Modal: Booking Form (small) -->
-  <div class="modal" id="bookModal">
-    <div class="wrap center" style="max-width:520px">
-      <h4 id="bookTitle">احجز الآن</h4>
-      <form id="bookForm" class="form" onsubmit="event.preventDefault(); handleBook()">
-        <input class="input" id="bname" required placeholder="اسمك">
-        <input class="input" id="bphone" required placeholder="رقم الهاتف">
-        <input class="input" id="bcar" id="bcar" readonly>
-        <div style="display:flex;gap:8px;justify-content:flex-end">
-          <button class="btn">إرسال</button>
-          <button class="btn ghost" type="button" onclick="closeModal('bookModal')">إلغاء</button>
-        </div>
-      </form>
+  <!-- Modal: compare -->
+  <div class="modal" id="compareModal">
+    <div class="wrap">
+      <h3>مقارنة السيارات</h3>
+      <div id="compareGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin-top:12px"></div>
+      <div style="display:flex;justify-content:flex-end;gap:8px;margin-top:12px">
+        <button class="btn ghost" onclick="closeModal('compareModal')">إغلاق</button>
+      </div>
     </div>
   </div>
 
-  <!-- Floating actions -->
-  <div class="float-actions">
-    <button class="pill" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">تواصل سريع</button>
-    <button class="pill" onclick="document.getElementById('signupForm').scrollIntoView({behavior:'smooth'})">سجل</button>
-  </div>
+  <!-- Floating compare bar -->
+  <div class="compare-bar" id="compareBar">مختار للمقارنة: <strong id="compareCount">0</strong></div>
 
   <footer>
     <div class="footer-grid">
       <div>
         <strong>LuxuryCars</strong>
-        <div class="small">عنوان المعرض: شارع المثال، القاهرة</div>
+        <div class="small">شارع المثال، القاهرة — اتصل: 0100-000-000</div>
       </div>
-      <div class="small">© 2025 LuxuryCars • جميع الحقوق محفوظة</div>
-      <div class="small">اتّصل: 0100-000-000 • info@luxurycars.example</div>
+      <div class="small">© 2025 LuxuryCars</div>
+      <div class="small">البريد: info@luxurycars.example</div>
     </div>
   </footer>
 
   <script>
-    // HERO slider
-    (function(){
-      const slides = document.querySelectorAll('.slide');
-      let idx = 0; const next = ()=>{ slides[idx].classList.remove('active'); idx=(idx+1)%slides.length; slides[idx].classList.add('active'); };
-      let timer = setInterval(next,4500);
-      document.getElementById('nextHero').addEventListener('click',()=>{clearInterval(timer); next(); timer=setInterval(next,4500)});
-      document.getElementById('prevHero').addEventListener('click',()=>{clearInterval(timer); slides[idx].classList.remove('active'); idx=(idx-1+slides.length)%slides.length; slides[idx].classList.add('active'); timer=setInterval(next,4500)});
-    })();
+    // ---------- Init Swiper Hero ----------
+    const heroSwiper = new Swiper('.hero-swiper', {loop:true,autoplay:{delay:4500,disableOnInteraction:false},effect:'slide'});
 
-    // FILTER + SEARCH
-    const cards = [...document.querySelectorAll('.card')];
+    // ---------- Data Generator (50+ cars) ----------
+    const BRANDS = ['Mercedes','BMW','Audi','Lexus','Porsche','Ferrari','Lamborghini','Rolls-Royce','Bentley','Jaguar','Maserati','Tesla','Chevrolet','Ford','Dodge','Range Rover','Cadillac','Aston Martin','Infiniti','Nissan'];
+    const cars = [];
+    for(let i=1;i<=80;i++){
+      const brand = BRANDS[Math.floor(Math.random()*BRANDS.length)];
+      const model = ['S','Series','A','GT','X','Q'][Math.floor(Math.random()*6)] + ' ' + (Math.floor(3+Math.random()*10));
+      const year = 2015 + Math.floor(Math.random()*11);
+      const price = (Math.floor(80 + Math.random()*920) * 1000); // 80k - 1M
+      const id = 'c'+i;
+      const images = [
+        `https://source.unsplash.com/900x600/?${brand.replace(/\s/g,'')},car,${i}`,
+        `https://source.unsplash.com/900x600/?${brand.replace(/\s/g,'')},interior,${i}`,
+        `https://source.unsplash.com/900x600/?${brand.replace(/\s/g,'')},detail,${i}`
+      ];
+      cars.push({id,brand,model,year,price,images,desc:`${brand} ${model} موديل ${year} — حالة ممتازة.`});
+    }
+
+    // populate brand filter
+    const brandSelect = document.getElementById('filterBrand');
+    [...new Set(cars.map(c=>c.brand))].sort().forEach(b=>{const opt=document.createElement('option');opt.value=b;opt.textContent=b;brandSelect.appendChild(opt) });
+
+    // ---------- Render grid ----------
+    const grid = document.getElementById('carsGrid');
+    function renderCars(list){
+      grid.innerHTML = '';
+      list.forEach(car=>{
+        const el = document.createElement('article'); el.className='card';
+        el.innerHTML = `
+          <div class="thumb" style="background-image:url('${car.images[0]}')"></div>
+          <div class="body">
+            <div class="meta"><div class="tag">${car.brand}</div><div class="tag">${car.year}</div></div>
+            <h4>${car.brand} ${car.model}</h4>
+            <div class="price">${car.price.toLocaleString()} ج.م</div>
+            <div class="actions">
+              <button class="btn" onclick="openDetail('${car.id}')">التفاصيل</button>
+              <button class="btn ghost" onclick="toggleCompare('${car.id}', event)">مقارنة</button>
+            </div>
+          </div>`;
+        grid.appendChild(el);
+      });
+    }
+    renderCars(cars.slice(0,24)); // initial
+
+    // load more
+    document.getElementById('loadMore').addEventListener('click', ()=>{
+      const current = grid.children.length; renderCars(cars.slice(0,current+24));
+    });
+
+    // ---------- Search & Filter ----------
     document.getElementById('searchBtn').addEventListener('click', applyFilters);
     function applyFilters(){
       const q = document.getElementById('q').value.trim().toLowerCase();
-      const make = document.getElementById('make').value;
-      const price = document.getElementById('price').value;
-      cards.forEach(c=>{
-        const name = c.dataset.name.toLowerCase();
-        const p = parseInt(c.dataset.price);
-        let show = true;
-        if(q) show = show && name.includes(q);
-        if(make) show = show && name.includes(make.toLowerCase());
-        if(price=='low') show = show && p < 500000;
-        if(price=='mid') show = show && p >=500000 && p<=1000000;
-        if(price=='high') show = show && p>1000000;
-        c.style.display = show? 'block':'none';
-      })
+      const b = document.getElementById('filterBrand').value;
+      const p = document.getElementById('filterPrice').value;
+      const filtered = cars.filter(c=>{
+        let ok=true;
+        if(q) ok = ok && (c.brand.toLowerCase()+ ' '+c.model.toLowerCase()).includes(q);
+        if(b) ok = ok && c.brand===b;
+        if(p==='lt500') ok = ok && c.price < 500000;
+        if(p==='500-1m') ok = ok && c.price>=500000 && c.price<=1000000;
+        if(p==='gt1m') ok = ok && c.price>1000000;
+        return ok;
+      });
+      renderCars(filtered);
     }
 
-    // OPEN DETAILS modal with slider thumbnails
-    function openDetails(card){
-      const modal = document.getElementById('detailModal');
-      const main = document.getElementById('modalMain');
-      const thumbs = document.getElementById('modalThumbs');
-      const name = card.dataset.name; const price = card.dataset.price; const arr = JSON.parse(card.dataset.images||'[]');
-      document.getElementById('modalName').textContent = name;
-      document.getElementById('modalDesc').textContent = 'تفاصيل مختصرة عن السيارة — يمكنك حجز معاينة أو طلب مواصفات كاملة.';
-
-      // specs placeholder
-      document.getElementById('modalSpecs').innerHTML = '<div class="spec">النوع: '+(card.querySelector('.tag')?.textContent||'—')+'</div><div class="spec">الناقل: أوتوماتيك</div><div class="spec">الكيلومترات: 30,000 كم</div><div class="spec">الحالة: ممتازة</div>';
-
-      if(arr.length){ main.style.backgroundImage = `url('${arr[0]}')`; thumbs.innerHTML = arr.map((u,i)=>`<img src="${u}" data-i="${i}" onclick="switchThumb(this)" class="${i===0?'active':''}"/>`).join(''); }
-      else{ main.style.backgroundImage = ''; thumbs.innerHTML = ''; }
-
-      // book button data
-      const bookBtn = document.getElementById('modalBookBtn'); bookBtn.onclick = ()=>{ openBookForm(name,price) };
-
-      modal.style.display = 'flex';
+    // ---------- Modal Detail ----------
+    const detailModal = document.getElementById('detailModal');
+    function openDetail(id){
+      const car = cars.find(c=>c.id===id); if(!car) return;
+      document.getElementById('modalMain').style.backgroundImage = `url('${car.images[0]}')`;
+      const thumbs = document.getElementById('modalThumbs'); thumbs.innerHTML = car.images.map((u,i)=>`<img src="${u}" data-i="${i}" onclick="switchThumb(this)" class="${i===0?'active':''}"/>`).join('');
+      document.getElementById('modalTitle').textContent = `${car.brand} ${car.model} موديل ${car.year}`;
+      document.getElementById('modalPrice').textContent = `${car.price.toLocaleString()} ج.م`;
+      document.getElementById('modalDesc').textContent = car.desc;
+      document.getElementById('modalSpecs').innerHTML = `<div class='spec'>النوع: ${car.brand}</div><div class='spec'>الناقل: أوتوماتيك</div><div class='spec'>الكيلومترات: ${(20000 + Math.floor(Math.random()*80000)).toLocaleString()} كم</div><div class='spec'>اللون: أسود</div>`;
+      detailModal.style.display = 'flex';
     }
     function switchThumb(el){ document.querySelectorAll('#modalThumbs img').forEach(i=>i.classList.remove('active')); el.classList.add('active'); document.getElementById('modalMain').style.backgroundImage = `url('${el.src}')`; }
-    document.getElementById('modalClose').addEventListener('click', ()=> closeModal('detailModal'));
+    document.getElementById('closeDetail').addEventListener('click', ()=> detailModal.style.display='none');
+    detailModal.addEventListener('click',(e)=>{ if(e.target===detailModal) detailModal.style.display='none' });
 
-    // Booking
-    function openBookForm(car,price){
-      const bm = document.getElementById('bookModal');
-      document.getElementById('bookTitle').textContent = 'احجز معاينة: '+car+' — '+price+' ج.م';
-      document.getElementById('bcar').value = car;
-      bm.style.display = 'flex';
-    }
+    // ---------- Compare feature ----------
+    const compareSet = new Set();
+    function toggleCompare(id, ev){ ev.stopPropagation(); if(compareSet.has(id)) compareSet.delete(id); else compareSet.add(id); updateCompareUI(); }
+    function updateCompareUI(){ document.getElementById('compareCount').textContent = compareSet.size; document.getElementById('openCompare').textContent = `قارن السيارات (${compareSet.size})`; }
+    document.getElementById('openCompare').addEventListener('click', ()=>{
+      const container = document.getElementById('compareGrid'); container.innerHTML=''; if(compareSet.size===0){ alert('اختر سيارات للمقارنة أولاً'); return; }
+      compareSet.forEach(id=>{ const car = cars.find(c=>c.id===id); if(car){ const el = document.createElement('div'); el.className='card'; el.innerHTML = `<div style="padding:12px"><div style="height:120px;background-image:url('${car.images[0]}');background-size:cover;border-radius:8px"></div><h4 style="margin-top:8px">${car.brand} ${car.model}</h4><div class='price'>${car.price.toLocaleString()} ج.م</div></div>`; container.appendChild(el);} });
+      document.getElementById('compareModal').style.display='flex';
+    });
     function closeModal(id){ document.getElementById(id).style.display='none'; }
 
-    // handle forms (placeholder actions)
-    function handleContact(){
-      const name=document.getElementById('cname').value; const phone=document.getElementById('cphone').value; const msg=document.getElementById('cmsg').value;
-      alert('تم استلام رسالتك، شكراً '+name+'\nسنرد خلال 24 ساعة.'); document.getElementById('contactForm').reset();
-    }
-    function handleSignup(){ const name=document.getElementById('sname').value; const email=document.getElementById('semail').value; alert('شكراً '+name+'! تم التسجيل بالبريد: '+email); document.getElementById('signupForm').reset(); }
-    function handleBook(){ const name=document.getElementById('bname').value; const phone=document.getElementById('bphone').value; const car=document.getElementById('bcar').value; alert('تم طلب حجز لمعاينة '+car+'\nشكراً '+name); closeModal('bookModal'); document.getElementById('bookForm').reset(); }
+    // ---------- Forms handlers (placeholders) ----------
+    function handleContact(){ alert('تم استلام الرسالة، شكراً لك!'); document.getElementById('contactForm').reset(); }
+    function handleSignup(){ alert('تم التسجيل!'); document.getElementById('signupForm').reset(); }
 
-    // close modals by clicking outside
-    document.querySelectorAll('.modal').forEach(m=>{ m.addEventListener('click', e=>{ if(e.target===m) m.style.display='none' }) });
+    // ---------- Book now (opens contact prefilled) ----------
+    document.getElementById('bookNow').addEventListener('click', ()=>{
+      const title = document.getElementById('modalTitle').textContent; closeModal('detailModal'); setTimeout(()=>{ document.getElementById('cmsg').value = 'أريد حجز معاينة لـ: '+title; document.getElementById('cname').focus(); window.scrollTo({top:document.getElementById('contact').offsetTop-80,behavior:'smooth'}) },300);
+    });
 
-    // Quick sign link
-    document.getElementById('openSign').addEventListener('click', (e)=>{ e.preventDefault(); document.getElementById('sname').focus(); window.scrollTo({top: document.getElementById('signupForm').getBoundingClientRect().top + window.scrollY - 100, behavior:'smooth'}) });
+    // ---------- Theme toggle ----------
+    const themeBtn = document.getElementById('themeToggle'); let light=false;
+    themeBtn.addEventListener('click', ()=>{ light = !light; document.body.style.background = light? 'linear-gradient(180deg,#f8fafc,#eaf2ff)':'linear-gradient(180deg,var(--bg),#071026)'; document.body.style.color = light? '#051426':'#e7f0ff'; themeBtn.textContent = light? 'وضع الليل':'وضع النهار'; });
+
+    // small UX: inject initial compare count
+    updateCompareUI();
   </script>
 </body>
 </html>
